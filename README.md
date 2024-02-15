@@ -1,2 +1,2 @@
-# baekjoon_algoritim
+# baekjoon_algorithm
 study for algorithm
