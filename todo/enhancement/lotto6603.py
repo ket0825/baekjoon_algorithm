@@ -139,5 +139,5 @@ while(True):
 	R=6
 	if(n[0]==0):
 		break
-	combination(1,0)
+	combination(1,0) # 1부터 시작.
 	print()
