@@ -121,3 +121,22 @@ def f(i, x):
     return f(i+1, x) + f(i+1, x-l[i])
 print(f(0,s) - (s==0))
 # 출처: eunsoo0607
+
+
+## 5. 하나하나 더해줌.
+n, s = map(int, input().split()) # 리스트 정수의 개수, 부분 수열의 합
+arr = list(map(int, input().split())) # 리스트
+
+cnt = 0 # 조건에 맞는 경우 카운트
+for i in range(1 << n):
+    subset = []
+    for j in range(n):
+        if i & (1 << j):
+            subset.append(arr[j])
+    if sum(subset) == s:
+        cnt += 1
+if s == 0: # s가 0일경우 공집합을 포함하기때문에, 이 경우를 제외한다.
+    cnt -= 1
+print(cnt)
+
+# 출처: https://sunshower99.tistory.com/10
