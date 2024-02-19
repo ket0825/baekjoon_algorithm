@@ -193,3 +193,113 @@ i\j	1	2	3	4
 #     ans = abs(score - link_score)
 #     result = min(result, ans)
 # print(result)
+
+## 3. bitmask로 풀기. 그런데 더 느림...
+
+import sys
+input = sys.stdin.readline
+
+def main():
+    N = int(input().rstrip("\n"))
+    board = [list(map(int, input().rstrip("\n").split(" "))) for _ in range(N)]
+    mask = int("0"*N, base=2)
+    score_diff = 1e8
+
+    # 000111
+    # 001011
+    # 010011
+
+    for i in range(1 << N): # 범위 설정을 어떻게 하지?
+        team = format(i, 'b').rjust(N, '0')
+        if team.count('1') == N/2:  #000111이라면.
+            start_team = []
+            link_team = []
+            for idx, ch in enumerate(team):
+                if ch == "0":
+                    start_team.append(idx)
+                else:
+                    link_team.append(idx)
+            start_score = 0
+            link_score = 0
+            for i in range(N):
+                for j in range(i+1,N):
+                    if i in start_team and j in start_team:
+                        start_score+=board[i][j]+ board[j][i]
+                    elif i in link_team and j in link_team:
+                        link_score+=board[i][j]+ board[j][i]
+
+            score_diff = min(score_diff, abs(start_score-link_score))
+
+    print(score_diff)
+
+
+if __name__ == "__main__":
+    # main()
+    a = 0b0000
+    for i in range(5):
+        print(a+i)
+
+# 모든 부분집합 순회하는 것도 가능함.
+origin = int('0b1101',2)
+subset = origin
+
+while True:
+    subset = (subset - 1) & origin 
+    # 이러면 하나씩 빼고, 결국 origin과 교집합이기에 모든 부분집합이 나옴.
+
+    if subset == 0:
+        break
+
+    print(bin(subset))
+
+
+## 4. 비트마스킹.
+    # 출처: msjang4. 다이아 5
+    """input
+8
+0 5 4 5 4 5 4 5
+4 0 5 1 2 3 4 5
+9 8 0 1 2 3 1 2
+9 9 9 0 9 9 9 9
+1 1 1 1 0 1 1 1
+8 7 6 5 4 0 3 2
+9 1 9 1 9 1 0 9
+6 5 4 3 2 1 9 0
+"""
+import sys
+
+read = sys.stdin.readline
+
+n = int(read())
+
+
+adj = [list(map(int, read().split())) for _ in range(n)]
+
+# 깊이는 11
+# 상태전이는 4 
+# 4^11 = 2^22 400만 정도?
+
+from itertools import combinations
+
+def solution():
+    team_size = n//2
+    team_count = 1<<n
+    power = [-1] *(team_count)  # power를 아예 array에 저장시킴.
+    answer = float('inf')
+    for team in combinations(range(n), team_size): 
+        status_bit = 0
+        team_power = 0
+        for i in range(team_size):
+            status_bit |= (1<<team[i])
+            for j in range(team_size):
+                if i!=j:
+                    team_power += adj[team[i]][team[j]] 
+        
+        
+        power[status_bit] = team_power
+        enemy_status_bit = team_count-1 - status_bit    # 1111111 - 100101 => # 011010
+        if power[enemy_status_bit] != -1:
+            answer = min(answer,abs(power[enemy_status_bit]-team_power))
+    return answer
+
+print(solution())
