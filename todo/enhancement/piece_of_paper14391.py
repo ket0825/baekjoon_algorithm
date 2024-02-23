@@ -89,7 +89,10 @@
 312 010  000 001 000
 """
 
-## 1. 비트마스킹 및 visited (DP) 사용.
+## 1. 비트마스킹 및 visited (DP) 사용. 난 string을 이용한 풀이였음.
+ # 연속되는 부분을 발견하면 쭉 확인하는 방식.
+ # 결과적으로는 column 단위 진행, row단위 진행보다 느림. 
+ # 굳이 역방향 순서로 bits를 진행할 필요는 없음.
 import sys
 input = sys.stdin.readline
 
@@ -99,17 +102,16 @@ def main():
     
     total_lst = []
     
-    for bits in range((1 << N*M)-1, -1, -1):    #000 000 001 000
+    # for bits in range((1 << N*M)-1, -1, -1):    #000 000 001 000
+    for bits in range(1 << N*M):    #000 000 001 000
         visited_bits = 0
         total = 0
-        format(bits, 'b').rjust(N*M, '0')
-        format(visited_bits, 'b').rjust(N*M, '0')
-
         for row in range(N):            
             for col in range(M):
                 index = row*M+col   # 0*N+0 = 0, 1*N+2 = N+2, # 0*N+M-1 = M-1 board
                 if visited_bits & (1 << (N*M - index - 1)):
                     continue
+
                 rowwise_piece_str = "0"
                 colwise_piece_str = "0"
                 if bits & (1 << index) == 0: # 세로로 더하기. 그런데 그 다음 비트 생각.
@@ -145,7 +147,10 @@ if __name__ =='__main__':
     main()
 
 
-## 2. 더 깔끔한 풀이. DP 안써서 더 빠른 것일수도.
+## 2. 더 깔끔한 풀이. DP 안써서 더 빠른 것일수도. 아이디: dx0802
+# string 안쓰고 자릿수 이동하는 것을 이용하여 10씩 곱해줌.
+# 연속적으로 더해주는 것보다 한번 할 때 column 단위, 
+# 또 한번 할 때 row 단위로 감.
 N, M = map(int, input().split())
 # bitmasking
 A = [list(map(int, input())) for _ in range(N)]
@@ -175,146 +180,3 @@ for i in range(1 << N * M):
         s += tmps
     ans = max(ans, s)
 print(ans)
-
-
-# import sys
-
-# input=sys.stdin.readline
-
-# N,M=map(int,input().strip().split())
-
-# graphs=[]
-
-# for _ in range(N):
-#     graphs.append(list(map(int,input().strip())))
-
-# ans=[]
-
-# def bitmask():
-#     for i in range(1<<N*M):
-#         total=0
-#         for row in range(N):
-#             rowsum=0
-#             for col in range(M):
-#                 idx=row*M+col
-#                 if i&(1<<idx) != 0:
-#                     rowsum=rowsum*10+graphs[row][col]
-#                 else:
-#                     total+=rowsum
-#                     rowsum=0
-#             total+=rowsum
-
-
-#     for col in range(M):
-#         colsum=0
-#         for row in range(N):
-#             idx=row*M+col
-#             if i&(1<<idx)==0:
-#                 colsum=colsum*10+graphs[row][col]
-#             else:
-#                 total+=colsum
-#                 colsum=0
-#         total+=colsum
-#     ans.append(total)
-
-# bitmask()
-
-# print(max(ans))        
-
-
-
-
-
-
-
-# 틀렸습니다 나옴.
-# import sys
-# input = sys.stdin.readline
-
-# def main():
-#     N, M = map(int, input().rstrip("\n").split()) #(1 ≤ N, M ≤ 4)
-#     board = [[num for num in input().rstrip("\n")] for _ in range(N) ]
-
-#     # trimming all row-wise elem is 0.
-#     for i in range(N):
-#         zero_row_count = 0
-#         for j in range(M):
-#             if board[i][j] == "0":
-#                 zero_row_count +=1
-#             else:
-#                 break
-#         if zero_row_count == M:
-#             for j in range(M):
-#                 board[i][j] = "-1"
-
-#     # trimming all col-wise elem is 0.
-#     for j in range(M):
-#         zero_col_count = 0
-#         for i in range(N):
-#             if board[i][j] == "0" or board[i][j] == "-1":   # -1로 변경해준 것도 기존에 0이었음.
-#                 zero_col_count +=1
-#             else:
-#                 break
-#         if zero_col_count == N:
-#             for i in range(N):
-#                 board[i][j] = "-1"
-
-#     trimmed_board = [[col for col in row if col != "-1"] for row in board]
-#     # empty list removing.
-#     remove_indices = []
-
-#     is_empty = True
-#     for i in trimmed_board:
-#         for j in i:
-#             if j:
-#                 is_empty = False   
-
-#     if is_empty:
-#         print(0)    
-#         return
-    
-#     for idx, row in enumerate(trimmed_board):
-#         if not row:
-#             remove_indices.append(idx)
-
-#     for i in remove_indices[::-1]:
-#         trimmed_board.pop(i)
-
-#     # print(trimmed_board)
-    
-#     trimmed_N = len(trimmed_board)
-#     trimmed_M = len(trimmed_board[0])
-
-#     row_wise_sum = 0
-#     col_wise_sum = 0
-
-#     if trimmed_N < trimmed_M:
-#         for row in trimmed_board:
-#             row_wise_sum+=int(''.join(row))
-        
-#         print(row_wise_sum)
-#     elif trimmed_N > trimmed_M:
-
-
-#         for col_idx in range(trimmed_M):    
-#             chars = ""
-#             for row_idx in range(trimmed_N):
-#                 chars+=trimmed_board[row_idx][col_idx]
-#             col_wise_sum += int(chars)
-        
-#         print(col_wise_sum)
-#     else:
-#         for row in trimmed_board:
-#             row_wise_sum+=int(''.join(row))
-
-#         for col_idx in range(trimmed_M):   
-#             chars = ""
-#             for row_idx in range(trimmed_N):
-#                 chars+=trimmed_board[row_idx][col_idx]
-#             col_wise_sum += int(chars)
-
-#         print(max(col_wise_sum,row_wise_sum))       
-
-
-# if __name__ == "__main__":
-#     main()
