@@ -73,7 +73,7 @@ n = int(input())
 
 
 numbers = [*map(int, input().split())]
-dp = [] # 이게 어차피 sorted list 형태이다.
+dp = [] # sorted list 형태로 진행.
 record = []
 
 for i in numbers:
@@ -81,7 +81,7 @@ for i in numbers:
     if p == len(dp):
         dp.append(i)
     else:
-        dp[p] = i
+        dp[p] = i  # 처음값보다 작은 경우 dp를 수정하지만 어차피 0번째이기에 대체되어도 최장 수열 길이에는 지장이 없음.
     record.append(p)
 ans_rev = []
 max_p = len(dp)
