@@ -26,44 +26,44 @@
 문제의 오타를 찾은 사람: jh05013
 """
 
-import sys
-input = sys.stdin.readline
+# import sys
+# input = sys.stdin.readline
 
-def main():
-    N = int(input().rstrip("\n"))
-    seq = [0] + list(map(int, input().rstrip('\n').split(" ")))
+# def main():
+#     N = int(input().rstrip("\n"))
+#     seq = [0] + list(map(int, input().rstrip('\n').split(" ")))
 
-    dp = [[i] for i in seq]
-    dp_num = [0] + [1]*N
+#     dp = [[i] for i in seq]
+#     dp_num = [0] + [1]*N
     
-    # seq[i]
-    # 시퀀스 자체 출력.
-    for i in range(1, N+1):
-        for j in range(1, i):
-            if seq[i] <= seq[j]:    # 같거나 작으면 넘김 (nested if 로 인한 pattern 개선.)
-                continue               
+#     # seq[i]
+#     # 시퀀스 자체 출력.
+#     for i in range(1, N+1):
+#         for j in range(1, i):
+#             if seq[i] <= seq[j]:    # 같거나 작으면 넘김 (nested if 로 인한 pattern 개선.)
+#                 continue               
 
-            if dp_num[i] > dp_num[j] + 1:
-                dp_num[i] = dp_num[i]            
-            else:    
-                dp_num[i] = dp_num[j] + 1
-                dp[i] = dp[j] + [dp[i][-1]]
+#             if dp_num[i] > dp_num[j] + 1:
+#                 dp_num[i] = dp_num[i]            
+#             else:    
+#                 dp_num[i] = dp_num[j] + 1
+#                 dp[i] = dp[j] + [dp[i][-1]]
 
     
-    max_length = 1
-    max_length_index = 1
-    for idx, i in enumerate(dp_num):
-        if max_length < i:
-            max_length_index = idx
-        max_length = max(max_length, i)
+#     max_length = 1
+#     max_length_index = 1
+#     for idx, i in enumerate(dp_num):
+#         if max_length < i:
+#             max_length_index = idx
+#         max_length = max(max_length, i)
         
-    print(max_length)
-    print(*dp[max_length_index])
+#     print(max_length)
+#     print(*dp[max_length_index])
     
 
 
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#     main()
 
 
 ## 2. 미리 다 구하고, dp - 1인 부분을 역순으로 찾아나가는 방식.
@@ -71,8 +71,9 @@ if __name__ == '__main__':
 import bisect
 n = int(input())
 
+
 numbers = [*map(int, input().split())]
-dp = []
+dp = [] # 이게 어차피 sorted list 형태이다.
 record = []
 
 for i in numbers:
