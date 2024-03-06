@@ -91,7 +91,8 @@ if __name__ == '__main__':
 
 
 ##2. 수학적으로 for 문 없이 바로 진행. 출처: hen7878
-# top-down 방식. 이렇게 하면 index 범위 벗어나는 것도 없음.
+# top-down 방식. 이렇게 하면 index 범위 벗어나는 것도 없음. 
+# 이게 더 빠른 이유가 이건가...
 N = int(input())
 
 dp = [0] * 100001
@@ -102,7 +103,22 @@ for i in range(1, 100000):
 
 print(dp[N])
 
-## 3. nlogn. int로 내림 가능!
+##3. 마찬가지. 출처: hui. 0을 이용하기도 함.
+n = int(input())
+
+lis = [0]*999999
+
+for i in range(1,n+1):
+    lis[i] = lis[i-1] + 1
+
+    j=1
+    while j*j <= i:
+        lis[i] = min(lis[i], lis[i-j*j]+1)
+        j+=1
+
+print(lis[n])
+
+## 4. nlogn. int로 내림 가능!
 import sys
 
 input = sys.stdin.readline
