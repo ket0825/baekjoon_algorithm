@@ -157,12 +157,11 @@ def main():
         dp[3] = max(dp[1] + wine_volume[3], dp[2], wine_volume[2] + wine_volume[3])
     if N > 3:
         for i in range(4, N+1):            
-            dp[i] = max(dp[i-2]+wine_volume[i], dp[i-1], dp[i-3]+wine_volume[i]+wine_volume[i-1])
+            dp[i] = max(dp[i-2] + wine_volume[i], dp[i-1], dp[i-3]+wine_volume[i]+wine_volume[i-1])
             #   . X O
-            #   . X O
+            #       X
             # . X O O
                         
-
     print(dp[N])
 
 
