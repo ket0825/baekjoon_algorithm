@@ -34,7 +34,7 @@ input = sys.stdin.readline
 def main():
     N = int(input().rstrip('\n')) # 1 ≤ N ≤ 1,000
     S = [*map(int, input().rstrip().split(" "))] # 1 ≤ Ai ≤ 1,000
-    S = [0]+S[::-1]
+    S = [0]+S[::-1] # 역순으로 만들어서 진행.
 
     dp = [0]*(N+1)
     dp[1] = S[1]
