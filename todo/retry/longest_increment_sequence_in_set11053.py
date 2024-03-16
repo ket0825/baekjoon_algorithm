@@ -160,3 +160,46 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+## 2. nlogn algorithm...
+"""LIS(Longest Increasing Subsequence, 최장 증가 수열)문제를 
+O(nlogn) 시간 복잡도로 해결하는 방법은 
+이진 탐색과 동적 프로그래밍을 결합한 방식입니다. 
+
+구체적인 단계는 다음과 같습니다.
+
+1. 길이를 저장할 배열 dp를 생성하고, 
+dp[0]을 입력 배열의 첫 번째 원소로 초기화합니다.
+
+2. 입력 배열의 두 번째 원소부터 순회하면서 다음을 수행합니다. 
+a. dp 배열에서 현재 원소보다 작은 가장 큰 값의 인덱스를 찾습니다. 
+이를 위해 이진 탐색을 사용합니다. 
+
+b. 해당 인덱스에 현재 원소를 대입합니다. 
+c. 만약 해당 인덱스가 dp 배열의 마지막 인덱스보다 크다면, 
+dp 배열의 길이를 1 증가시킵니다.
+
+최종적으로 dp 배열의 길이가 LIS의 길이가 됩니다.
+"""
+from bisect import bisect_left
+
+def lis(arr):
+    if not arr:
+        return 0
+
+    dp = [0] * (len(arr) + 1)
+    length = 1  # 제일 길었던 길이.
+    dp[1] = arr[0]
+
+    for i in range(1, len(arr)):
+        if arr[i] > dp[length]: # 일단 arr[i]가 dp[length]보다 크면 더 길게 할 수 있으니 올리고, 그 새로운 자리에 arr[i]를 한다.
+            length += 1
+            dp[length] = arr[i]
+        else: # 더 크지 않다면, 지금까지 dp 중 왼쪽부터 가장 큰 쪽에 대신하여 넣어준다. (어차피 길이만 중요하니)
+            idx = bisect_left(dp, arr[i], 1, length) 
+            # 원래 dp 리스트에서 i번쨰 원소가 1부터 length 사이에서 어디에 끼면 되냐.
+            dp[idx] = arr[i]
+
+    return length
+
+lis([1,100,2,50,60,3,5,6,7,8])
