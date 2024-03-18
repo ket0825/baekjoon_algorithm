@@ -72,7 +72,7 @@ a와 b가 친구라는 뜻이다. (0 ≤ a, b ≤ N-1, a ≠ b)
 문제의 오타를 찾은 사람: jason9319
 """
 
-##1. graph 그리고 search (BFS)
+##1. graph 그리고 search (BFS). one way가 아님.
 import sys
 from collections import deque
 
@@ -85,6 +85,7 @@ def main():
     for _ in range(M):
         a, b = map(int, input().rstrip().split(" ")) # (0 ≤ a, b ≤ N-1, a ≠ b) 
         graph[a].append(b)
+        graph[b].append(a)
         
     finished = False
     
@@ -97,41 +98,30 @@ def main():
             continue
 
         q = deque()
-        vistited = [False]*N
+
         for elem in node:
-            q.appendleft((elem,1))
-            vistited[i] = True        
-            vistited[elem] = True        
+            q.appendleft((elem,[i, elem]))   
 
         while not finished and q:
             if finished:
                 break
             else:
-                start, distance = q.pop()
+                start, visited = q.pop()
                 
                 for next in graph[start]:
-                    if not vistited[next]:
-                        vistited[next] = True
-                        if distance+1 == 4:
+                    if next not in visited:
+                        if len(visited)+1 == 5:
+                            # print(visited+[next])
                             finished = True
                             break
-                        q.appendleft((next, distance+1))
-            
-       
-
+                        q.appendleft((next, visited+[next]))
 
     if finished:
         print(1)
     else:
         print(0)
         
-
-
-    
-
-    
-
-
+        
 if __name__ == '__main__':
     main()
 
