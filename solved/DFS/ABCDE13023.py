@@ -73,68 +73,114 @@ a와 b가 친구라는 뜻이다. (0 ≤ a, b ≤ N-1, a ≠ b)
 """
 
 ##1. graph 그리고 search (BFS). one way가 아님.
+# import sys
+# from collections import deque
+
+# input = sys.stdin.readline
+
+# def main():
+#     N, M = map(int, input().rstrip().split(" ")) # N (5 ≤ N ≤ 2000), M (1 ≤ M ≤ 2000)
+#     graph = [[] for _ in range(N)]
+
+#     for _ in range(M):
+#         a, b = map(int, input().rstrip().split(" ")) # (0 ≤ a, b ≤ N-1, a ≠ b) 
+#         graph[a].append(b)
+#         graph[b].append(a)
+        
+#     finished = False
+    
+#     for i in range(N):
+#         node = graph[i]
+#         if finished:
+#             break
+
+#         if not node:
+#             continue
+
+#         q = deque()
+
+#         for elem in node:
+#             q.appendleft((elem,[i, elem]))   
+
+#         while not finished and q:
+#             if finished:
+#                 break
+#             else:
+#                 start, visited = q.pop()
+                
+#                 for next in graph[start]:
+#                     if next not in visited:
+#                         if len(visited)+1 == 5:
+#                             # print(visited+[next])
+#                             finished = True
+#                             break
+#                         q.appendleft((next, visited+[next]))
+
+#     if finished:
+#         print(1)
+#     else:
+#         print(0)
+        
+        
+# if __name__ == '__main__':
+#     main()
+
+
+##2. graph 그리고 search (DFS). list 형태 말고 count로 넘겨줘도 된다!
 import sys
 from collections import deque
 
 input = sys.stdin.readline
 
-def main():
-    N, M = map(int, input().rstrip().split(" ")) # N (5 ≤ N ≤ 2000), M (1 ≤ M ≤ 2000)
-    graph = [[] for _ in range(N)]
+N, M = map(int, input().rstrip().split(" ")) # N (5 ≤ N ≤ 2000), M (1 ≤ M ≤ 2000)
+graph = [[] for _ in range(N)]
 
+finished = False
+
+def main():
     for _ in range(M):
-        a, b = map(int, input().rstrip().split(" ")) # (0 ≤ a, b ≤ N-1, a ≠ b) 
+        a, b = map(int, input().rstrip().split(" "))
         graph[a].append(b)
         graph[b].append(a)
-        
-    finished = False
     
+    def dfs(stack):
+        global finished
+        if not stack:
+            return
+
+        if len(stack) == 5:
+            finished = True
+            return
+                
+        start = stack[-1]
+        if not graph[start]:
+            return
+        for elem in graph[start]:
+            if not visited[elem]:
+                visited[elem] = True
+                dfs(stack + [elem])
+                visited[elem] = False
+                
+                if finished:
+                    return
+
     for i in range(N):
-        node = graph[i]
+        if not graph[i]:
+            continue
+    
+        visited = [False]*N
+        visited[i] = True
+        dfs([i])
+        visited[i] = False
+        
         if finished:
             break
-
-        if not node:
-            continue
-
-        q = deque()
-
-        for elem in node:
-            q.appendleft((elem,[i, elem]))   
-
-        while not finished and q:
-            if finished:
-                break
-            else:
-                start, visited = q.pop()
-                
-                for next in graph[start]:
-                    if next not in visited:
-                        if len(visited)+1 == 5:
-                            # print(visited+[next])
-                            finished = True
-                            break
-                        q.appendleft((next, visited+[next]))
-            
-       
-
-
+                     
     if finished:
         print(1)
     else:
         print(0)
-        
-
-
-    
-
-    
 
 
 if __name__ == '__main__':
     main()
-
-
-##2. graph 그리고 search (DFS)
-
-
