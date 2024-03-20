@@ -66,6 +66,7 @@ def main():
         for i in range(2, N+1):
             for j in range(len(dp)):
                 if dp[j][i-1] + seq[i] < seq[i] and max_value < dp[i-2]:
+                    pass
                 
 
 
