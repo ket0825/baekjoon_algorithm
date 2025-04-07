@@ -37,6 +37,8 @@ N(1 ≤ N ≤ 50,000)개의 점들이 있을 때, 최대 L1-metric 거리를 찾
 
 
 """
+
+# 기존에는 x, y 측에서 좌표계에서의 max, min 4가지를 고려함. 다른 좌표축이기에 다르게 표현해야 함
 import sys
 input = sys.stdin.readline
 
