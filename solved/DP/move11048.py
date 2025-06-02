@@ -52,41 +52,86 @@ r번째 줄의 c번째 수는 (r, c)에 놓여져 있는 사탕의 개수이다.
 import sys
 input = sys.stdin.readline
 
-def sol1():
-    N, M = map(int, input().rstrip().split())# (1 ≤ N, M ≤ 1,000)
-    mat = []
-    drc = [(1, 0), (0, 1), (1, 1)]
-    for _ in range(N):
-        l = list(map(int, input().rstrip().split()))
-        l.append(0)
-        mat.append(l)
-    mat.append([0]*(M+1))            
-    # r과 d가 같이 가는 대각선
-    # 이동 가능한 장소: (+1, 0), (0, 1), (1, 1)                
-    for d in range(N+M+2):
-        for r in range(min(d, N), -1 ,-1): 
-            r = r
-            c = d - r
-            if c > M:
-                break
-            sum_candidate = [mat[r-dr][c-dc] for dr, dc in drc if r - dr >= 0 and c - dc >= 0]            
-            if sum_candidate:
-                mat[r][c] += max(sum_candidate)
+def sol():
+    N, M = map(int, input().strip().split())
+    candies = [list(map(int, input().strip().split())) for _ in range(N)]
+    dps = [[0]* M for _ in range(N)]
+    dr = [0,1,1]
+    dc = [1,0,1]
     
-    print(mat[N][M])        
+    def check(r, c):        
+        for i in range(3):
+            nr = r + dr[i]
+            nc = c + dc[i]
+            if 0 <= nr < N and 0 <= nc < M:
+                dps[nr][nc] = max(dps[nr][nc], dps[r][c]+candies[nr][nc])
 
-# 일반적인 방식 (역으로 접근하진 않음.)    
-def sol2():
-    N, M = map(int, input().rstrip().split())
-    mat = [list(map(int, input().rstrip().split())) for _ in range(N)]
+    dps[0][0] = candies[0][0]
+    for i in range(N):
+        for j in range(M):
+            check(i,j)
+
+    print(dps[N-1][M-1])        
     
-    drc = [(-1, 0), (-1, -1), (0, -1)]
-    for r in range(N):
-        for c in range(M):            
-            candidate = [mat[r+dr][c+dc] for dr, dc in drc if r + dr >= 0 and c + dc >= 0]
-            if candidate:
-                mat[r][c] += max(candidate)            
 
-    print(mat[N-1][M-1])
+if __name__ == '__main__':
+    sol()
 
-sol2()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# import sys
+# input = sys.stdin.readline
+
+# def sol1():
+#     N, M = map(int, input().rstrip().split())# (1 ≤ N, M ≤ 1,000)
+#     mat = []
+#     drc = [(1, 0), (0, 1), (1, 1)]
+#     for _ in range(N):
+#         l = list(map(int, input().rstrip().split()))
+#         l.append(0)
+#         mat.append(l)
+#     mat.append([0]*(M+1))            
+#     # r과 d가 같이 가는 대각선
+#     # 이동 가능한 장소: (+1, 0), (0, 1), (1, 1)                
+#     for d in range(N+M+2):
+#         for r in range(min(d, N), -1 ,-1): 
+#             r = r
+#             c = d - r
+#             if c > M:
+#                 break
+#             sum_candidate = [mat[r-dr][c-dc] for dr, dc in drc if r - dr >= 0 and c - dc >= 0]            
+#             if sum_candidate:
+#                 mat[r][c] += max(sum_candidate)
+    
+#     print(mat[N][M])        
+
+# # 일반적인 방식 (역으로 접근하진 않음.)    
+# def sol2():
+#     N, M = map(int, input().rstrip().split())
+#     mat = [list(map(int, input().rstrip().split())) for _ in range(N)]
+    
+#     drc = [(-1, 0), (-1, -1), (0, -1)]
+#     for r in range(N):
+#         for c in range(M):            
+#             candidate = [mat[r+dr][c+dc] for dr, dc in drc if r + dr >= 0 and c + dc >= 0]
+#             if candidate:
+#                 mat[r][c] += max(candidate)            
+
+#     print(mat[N-1][M-1])
+
+# sol2()

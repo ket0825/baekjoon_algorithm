@@ -37,6 +37,10 @@
 
 2
 ---
+10 10
+1 1 1 1 1 1 1 1 1 10
+
+1
 """
 
 import sys
@@ -123,7 +127,39 @@ def sol():
         print(0)
     else:
         print(min_length)
+
+
+import sys
+input = sys.stdin.readline
+
+def sol2():
+    N, S = map(int, input().strip().split())
+    seq = list(map(int, input().strip().split()))
+    answer = 100001
+    
+    left = 0
+    right = 0
+    psum = 0
+    while left < N:
+        # print(f"left: {left}, right: {right}, psum: {psum}")
+        if S <= psum:
+            answer = min(answer, right-left)
+            # print(f"answer: {answer}")
+            psum-=seq[left]
+            left+=1
+        else:
+            if right < N:
+                psum+=seq[right]
+                right+=1
+            else:
+                psum-=seq[left]
+                left+=1    
+
+    if answer == 100001:
+        print(0)
+    else:
+        print(answer)    
     
 
 if __name__ == '__main__':
-    sol()
+    sol2()
